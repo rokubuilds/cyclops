@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYCLOPS - Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 50 40" fill="none">
+                    <!-- Eye shape outline - transparent with cyan border -->
+                    <path d="M25 5C15 5 7 15 2 20C7 25 15 35 25 35C35 35 43 25 48 20C43 15 35 5 25 5Z" 
+                          stroke="currentColor" stroke-width="2.5" fill="none"/>
+                    <!-- Eyeball - large circle overlapping with outline, transparent with cyan border -->
+                    <circle cx="25" cy="20" r="14" stroke="currentColor" stroke-width="2.5" fill="none"/>
+                    <!-- Pupil - cyan filled circle -->
+                    <circle id="logo-pupil" cx="25" cy="20" r="7" fill="currentColor"/>
+                </svg>
+                <span class="logo-text">CYCLOPS</span>
+            </div>
+            <a href="index.html" class="nav-cta" style="text-decoration: none;">Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Demo Section -->
+    <section style="min-height: 100vh; padding: 8rem 2rem 4rem; max-width: 1600px; margin: 0 auto;">
+        <div style="margin-bottom: 2rem;">
+            <div class="hero-badge" style="margin-bottom: 1rem;">
+                <span class="badge-dot"></span>
+                LIVE DEMO
+            </div>
+            <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 1rem;">
+                Gait Analysis <span class="gradient-text">Demo</span>
+            </h1>
+        </div>
+
+        <!-- Main Demo Layout -->
+        <div style="display: grid; grid-template-columns: 250px 220px 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <!-- Left: Portrait + Button -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Portrait -->
+                <div style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; height: 320px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">
+                    Subject Portrait
+                </div>
+                
+                <!-- Calculate Button -->
+                <button class="btn-primary" style="padding: 1rem 2rem; font-size: 1rem; width: 100%; justify-content: center;">
+                    <span>Calculate Challenge</span>
+                </button>
+            </div>
+
+            <!-- Middle: Stat Boxes -->
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Velocity -->
+                <div class="metric" style="padding: 1.25rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; flex: 1;">
+                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Velocity</div>
+                    <div class="metric-value" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
+                        <span id="demo-velocity">1.35</span>
+                        <span style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
+                    </div>
+                </div>
+
+                <!-- Acceleration -->
+                <div class="metric" style="padding: 1.25rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; flex: 1;">
+                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Acceleration</div>
+                    <div class="metric-value" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
+                        <span id="demo-acceleration">0.42</span>
+                        <span style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s²</span>
+                    </div>
+                </div>
+
+                <!-- Confidence -->
+                <div class="metric" style="padding: 1.25rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; flex: 1;">
+                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Confidence</div>
+                    <div class="metric-value" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
+                        <span id="demo-confidence">98.5</span>
+                        <span style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: LiDAR Visualization -->
+            <div style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; max-width: 600px;">
+                LiDAR Visualization
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+            <!-- Step Size -->
+            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Step Size</div>
+                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                    <span id="demo-step-size">72</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">cm</span>
+                </div>
+            </div>
+
+            <!-- Cadence -->
+            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Cadence</div>
+                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                    <span id="demo-cadence">115</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">steps/min</span>
+                </div>
+            </div>
+
+            <!-- Stride Length -->
+            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Stride Length</div>
+                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                    <span id="demo-stride">144</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">cm</span>
+                </div>
+            </div>
+
+            <!-- Balance Score -->
+            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Balance Score</div>
+                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                    <span id="demo-balance">92.3</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                </div>
+            </div>
+
+            <!-- Gait Symmetry -->
+            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Gait Symmetry</div>
+                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                    <span id="demo-symmetry">97.2</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                </div>
+            </div>
+
+            <!-- Ground Contact Time -->
+            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Ground Contact</div>
+                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                    <span id="demo-contact">245</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">ms</span>
+                </div>
+            </div>
+
+            <!-- Stance Time -->
+            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Stance Time</div>
+                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                    <span id="demo-stance">62</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                </div>
+            </div>
+
+            <!-- Swing Time -->
+            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Swing Time</div>
+                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                    <span id="demo-swing">38</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                </div>
+            </div>
+
+            <!-- Double Support -->
+            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Double Support</div>
+                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                    <span id="demo-support">24</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

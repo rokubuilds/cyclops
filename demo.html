@@ -49,36 +49,36 @@
                 
                 <!-- Calculate Button -->
                 <button class="btn-primary" style="padding: 1rem 2rem; font-size: 1rem; width: 100%; justify-content: center;">
-                    <span>Calculate Challenge</span>
+                    <span>Calculate Chalance</span>
                 </button>
             </div>
 
             <!-- Middle: Stat Boxes -->
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                <!-- Velocity -->
+                <!-- Avg Speed -->
                 <div class="metric" style="padding: 1.25rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; flex: 1;">
-                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Velocity</div>
+                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Avg Speed</div>
                     <div class="metric-value" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
-                        <span id="demo-velocity">1.35</span>
+                        <span id="demo-avg-speed">1.35</span>
                         <span style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
                     </div>
                 </div>
 
-                <!-- Acceleration -->
+                <!-- Avg Acceleration -->
                 <div class="metric" style="padding: 1.25rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; flex: 1;">
-                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Acceleration</div>
+                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Avg Accel</div>
                     <div class="metric-value" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
-                        <span id="demo-acceleration">0.42</span>
+                        <span id="demo-avg-accel">0.42</span>
                         <span style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s²</span>
                     </div>
                 </div>
 
-                <!-- Confidence -->
+                <!-- Avg Height -->
                 <div class="metric" style="padding: 1.25rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; flex: 1;">
-                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Confidence</div>
+                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Avg Height</div>
                     <div class="metric-value" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
-                        <span id="demo-confidence">98.5</span>
-                        <span style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                        <span id="demo-avg-height">1.68</span>
+                        <span style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m</span>
                     </div>
                 </div>
             </div>
@@ -91,84 +91,102 @@
 
         <!-- Stats Grid -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
-            <!-- Step Size -->
+            <!-- Max Speed -->
             <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Step Size</div>
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Max Speed</div>
                 <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-step-size">72</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">cm</span>
+                    <span id="demo-max-speed">1.85</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
                 </div>
             </div>
 
-            <!-- Cadence -->
+            <!-- Min Speed -->
             <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Cadence</div>
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Min Speed</div>
                 <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-cadence">115</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">steps/min</span>
+                    <span id="demo-min-speed">0.92</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
                 </div>
             </div>
 
-            <!-- Stride Length -->
+            <!-- Speed Range -->
             <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Stride Length</div>
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Speed Range</div>
                 <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-stride">144</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">cm</span>
+                    <span id="demo-speed-range">0.93</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
                 </div>
             </div>
 
-            <!-- Balance Score -->
+            <!-- Speed Std Dev -->
             <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Balance Score</div>
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Speed Std Dev</div>
                 <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-balance">92.3</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                    <span id="demo-speed-std">0.18</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
                 </div>
             </div>
 
-            <!-- Gait Symmetry -->
+            <!-- Height Std Dev -->
             <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Gait Symmetry</div>
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Height Std Dev</div>
                 <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-symmetry">97.2</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                    <span id="demo-height-std">0.04</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m</span>
                 </div>
             </div>
 
-            <!-- Ground Contact Time -->
+            <!-- Height Range -->
             <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Ground Contact</div>
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Height Range</div>
                 <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-contact">245</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">ms</span>
+                    <span id="demo-height-range">0.12</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m</span>
                 </div>
             </div>
 
-            <!-- Stance Time -->
+            <!-- Vertical Range -->
             <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Stance Time</div>
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Vertical Range</div>
                 <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-stance">62</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                    <span id="demo-vertical-range">0.08</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m</span>
                 </div>
             </div>
 
-            <!-- Swing Time -->
+            <!-- Accel Std Dev -->
             <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Swing Time</div>
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Accel Std Dev</div>
                 <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-swing">38</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                    <span id="demo-accel-std">0.15</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s²</span>
                 </div>
             </div>
 
-            <!-- Double Support -->
+            <!-- Step Rhythm -->
             <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Double Support</div>
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Step Rhythm</div>
                 <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-support">24</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">%</span>
+                    <span id="demo-step-rhythm">1.9</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">Hz</span>
+                </div>
+            </div>
+
+            <!-- Lateral Movement -->
+            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Lateral Movement</div>
+                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                    <span id="demo-lateral">0.06</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m</span>
+                </div>
+            </div>
+
+            <!-- Vertical Velocity Std -->
+            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Vert Velocity Std</div>
+                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                    <span id="demo-vert-velocity-std">0.11</span>
+                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
                 </div>
             </div>
         </div>

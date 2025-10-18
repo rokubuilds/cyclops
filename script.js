@@ -155,27 +155,27 @@ class GaitVisualization {
 
 // Update Metrics
 function updateMetrics() {
-    const cadence = document.getElementById('cadence');
-    const velocity = document.getElementById('velocity');
-    const symmetry = document.getElementById('symmetry');
+    const avgSpeed = document.getElementById('avg-speed');
+    const avgHeight = document.getElementById('avg-height');
+    const stepRhythm = document.getElementById('step-rhythm');
 
-    if (!cadence) return;
+    if (!avgSpeed) return;
 
     setInterval(() => {
         // Simulate real-time data updates
-        const cadenceValue = (110 + Math.random() * 10).toFixed(0);
-        const velocityValue = (1.2 + Math.random() * 0.3).toFixed(2);
-        const symmetryValue = (95 + Math.random() * 4).toFixed(1);
+        const avgSpeedValue = (1.2 + Math.random() * 0.3).toFixed(2);
+        const avgHeightValue = (1.65 + Math.random() * 0.05).toFixed(2);
+        const stepRhythmValue = (1.8 + Math.random() * 0.2).toFixed(1);
 
-        cadence.textContent = cadenceValue;
-        velocity.textContent = velocityValue;
-        symmetry.textContent = symmetryValue;
+        avgSpeed.textContent = avgSpeedValue;
+        avgHeight.textContent = avgHeightValue;
+        stepRhythm.textContent = stepRhythmValue;
     }, 2000);
 
     // Set initial values
-    cadence.textContent = '115';
-    velocity.textContent = '1.35';
-    symmetry.textContent = '97.2';
+    avgSpeed.textContent = '1.35';
+    avgHeight.textContent = '1.68';
+    stepRhythm.textContent = '1.9';
 }
 
 // Smooth scroll for navigation

@@ -55,8 +55,8 @@
             <!-- Left: Portrait + Button -->
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                 <!-- Portrait -->
-                <div style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; height: 500px; width: 450px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">
-                    Subject Portrait
+                <div style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; height: 500px; width: 450px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                    <img id="subjectPortrait" src="" alt="Subject Portrait" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                 </div>
                 
                 <!-- Calculate Button -->
@@ -349,11 +349,32 @@
             updateConnectionStatus(false); // Mark as disconnected for simulation
         }
         
+        // Fetch prediction data and update portrait
+        async function fetchPrediction() {
+            try {
+                const response = await fetch('/api/predict');
+                const data = await response.json();
+
+                if (data.name) {
+                    const img = document.getElementById('subjectPortrait');
+                    img.src = `images/${data.name}.png`;
+                    console.log(`Updated portrait to ${data.name} (confidence: ${data.confidence})`);
+                }
+            } catch (error) {
+                console.error('Failed to fetch prediction data:', error);
+            }
+        }
+
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initCharts();
             updateConnectionStatus(false);
-            
+
+            // Fetch initial prediction
+            fetchPrediction();
+            // Update prediction every 500ms
+            setInterval(fetchPrediction, 500);
+
             // Try to connect to real IMU data first
             setTimeout(async () => {
                 try {

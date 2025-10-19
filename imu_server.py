@@ -518,6 +518,10 @@ def styles():
 def script():
     return send_from_directory('.', 'script.js')
 
+@app.route('/images/<path:filename>')
+def images(filename):
+    return send_from_directory('images', filename)
+
 @app.route('/api/imu')
 def get_imu_data():
     """Get current IMU data"""

@@ -355,7 +355,7 @@
                 const response = await fetch('/api/predict');
                 const data = await response.json();
 
-                if (data.name) {
+                if (data.name && data.name !== 'Unknown' && data.name !== 'Not trained') {
                     const img = document.getElementById('subjectPortrait');
                     img.src = `images/${data.name}.png`;
                     console.log(`Updated portrait to ${data.name} (confidence: ${data.confidence})`);

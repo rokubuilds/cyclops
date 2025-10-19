@@ -1,3 +1,17 @@
+// People Class
+class People {
+    constructor(name, image) {
+        this.name = name;
+        this.image = image;
+    }
+}
+
+// Create instances for each person
+const caroline = new People('caroline', 'images/caroline_walk.png');
+const henrik = new People('henrik', 'images/henrik_walk.png');
+const mofei = new People('mofei', 'images/mofei_walk.png');
+const rohan = new People('rohan', 'images/rohan_walk.png');
+
 // Counter Animation for Stats
 function animateCounter(element, target, duration = 2000) {
     const start = 0;
@@ -320,6 +334,343 @@ function initEyeTracking() {
     }, 500); // Small delay to show centered state on load
 }
 
+// Trigger Button Functionality
+function initTriggerButton() {
+    const triggerBtn = document.getElementById('trigger-btn');
+    const portraitImage = document.getElementById('portrait-image');
+    const portraitPlaceholder = document.getElementById('portrait-placeholder');
+    const authStatus = document.getElementById('auth-status');
+    const authMessage = document.getElementById('auth-message');
+    const rejectX = document.getElementById('reject-x');
+    const checkmark = document.getElementById('auth-checkmark');
+    const rejectIcon = document.getElementById('auth-reject-x');
+    
+    if (!triggerBtn || !portraitImage) return;
+    
+    // Array of all people instances
+    const peopleArray = [caroline, henrik, mofei, rohan];
+    
+    triggerBtn.addEventListener('click', () => {
+        // Hide reject X if visible
+        if (rejectX) rejectX.style.display = 'none';
+        
+        // Randomly select one person
+        const randomPerson = peopleArray[Math.floor(Math.random() * peopleArray.length)];
+        
+        // Update the image
+        portraitImage.src = randomPerson.image;
+        portraitImage.style.display = 'block';
+        
+        // Hide placeholder text
+        if (portraitPlaceholder) {
+            portraitPlaceholder.style.display = 'none';
+        }
+        
+        // Add a fade-in effect
+        portraitImage.style.opacity = '0';
+        setTimeout(() => {
+            portraitImage.style.transition = 'opacity 0.5s ease-in-out';
+            portraitImage.style.opacity = '1';
+        }, 10);
+        
+        // Show authorization message
+        if (authStatus && authMessage) {
+            const capitalizedName = randomPerson.name.charAt(0).toUpperCase() + randomPerson.name.slice(1);
+            authMessage.textContent = `${capitalizedName} is authorized!`;
+            authMessage.style.color = '#10b981';
+            authStatus.style.display = 'flex';
+            authStatus.style.borderColor = '#10b981';
+            
+            // Show checkmark, hide reject X
+            if (checkmark) checkmark.style.display = 'block';
+            if (rejectIcon) rejectIcon.style.display = 'none';
+            
+            // Flash the authorization box green
+            authStatus.style.background = 'rgba(16, 185, 129, 0.3)';
+            setTimeout(() => {
+                authStatus.style.transition = 'background 0.5s ease';
+                authStatus.style.background = 'var(--bg-secondary)';
+            }, 200);
+            
+            // Animate the checkmark
+            if (checkmark) {
+                checkmark.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    checkmark.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    checkmark.style.transform = 'scale(1)';
+                }, 50);
+            }
+        }
+        
+        console.log(`Loaded: ${randomPerson.name} - AUTHORIZED`);
+    });
+}
+
+// Reject Button Functionality
+function initRejectButton() {
+    const rejectBtn = document.getElementById('reject-btn');
+    const portraitImage = document.getElementById('portrait-image');
+    const portraitPlaceholder = document.getElementById('portrait-placeholder');
+    const authStatus = document.getElementById('auth-status');
+    const authMessage = document.getElementById('auth-message');
+    const rejectX = document.getElementById('reject-x');
+    const checkmark = document.getElementById('auth-checkmark');
+    const rejectIcon = document.getElementById('auth-reject-x');
+    
+    if (!rejectBtn) return;
+    
+    rejectBtn.addEventListener('click', () => {
+        // Hide any loaded image
+        if (portraitImage) {
+            portraitImage.style.display = 'none';
+        }
+        
+        // Show placeholder text
+        if (portraitPlaceholder) {
+            portraitPlaceholder.style.display = 'block';
+        }
+        
+        // Show big red X overlay
+        if (rejectX) {
+            rejectX.style.display = 'flex';
+            rejectX.style.opacity = '0';
+            setTimeout(() => {
+                rejectX.style.transition = 'opacity 0.3s ease-in-out';
+                rejectX.style.opacity = '1';
+            }, 10);
+        }
+        
+        // Show rejection message
+        if (authStatus && authMessage) {
+            authMessage.textContent = 'UNAUTHORIZED USER REJECTED!';
+            authMessage.style.color = '#ef4444';
+            authStatus.style.display = 'flex';
+            authStatus.style.borderColor = '#ef4444';
+            
+            // Show reject X icon, hide checkmark
+            if (checkmark) checkmark.style.display = 'none';
+            if (rejectIcon) rejectIcon.style.display = 'block';
+            
+            // Flash the authorization box red
+            authStatus.style.background = 'rgba(239, 68, 68, 0.3)';
+            setTimeout(() => {
+                authStatus.style.transition = 'background 0.5s ease';
+                authStatus.style.background = 'var(--bg-secondary)';
+            }, 200);
+            
+            // Animate the reject icon
+            if (rejectIcon) {
+                rejectIcon.style.transform = 'scale(0) rotate(0deg)';
+                setTimeout(() => {
+                    rejectIcon.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    rejectIcon.style.transform = 'scale(1) rotate(90deg)';
+                }, 50);
+            }
+        }
+        
+        console.log('UNAUTHORIZED USER - REJECTED');
+    });
+}
+
+// Calculate nonchalance score based on gait features
+function calculateNonchalance() {
+    // Get all the feature values from the page
+    const features = {
+        avg_speed: parseFloat(document.getElementById('demo-avg-speed').textContent),
+        speed_std: parseFloat(document.getElementById('demo-speed-std').textContent),
+        avg_accel: parseFloat(document.getElementById('demo-avg-accel').textContent),
+        accel_std: parseFloat(document.getElementById('demo-accel-std').textContent),
+        step_rhythm: parseFloat(document.getElementById('demo-step-rhythm').textContent),
+        lateral_movement: parseFloat(document.getElementById('demo-lateral').textContent),
+        vertical_range: parseFloat(document.getElementById('demo-vertical-range').textContent),
+        vertical_velocity_std: parseFloat(document.getElementById('demo-vert-velocity-std').textContent)
+    };
+    
+    // 1. Speed component (30% weight)
+    const speed_target = 1.2; // m/s
+    const speed_deviation = Math.abs(features.avg_speed - speed_target) / speed_target;
+    const speed_score = Math.max(0, 1 - speed_deviation) * 100;
+    
+    const speed_consistency = features.avg_speed > 0 
+        ? Math.max(0, 1 - (features.speed_std / features.avg_speed)) * 100 
+        : 0;
+    const speed_component = (speed_score * 0.6 + speed_consistency * 0.4) * 0.30;
+    
+    // 2. Rhythm component (25% weight)
+    const rhythm_irregularity = Math.min(features.step_rhythm / 0.5, 1.0) * 100;
+    const rhythm_component = rhythm_irregularity * 0.25;
+    
+    // 3. Smoothness component (25% weight)
+    const accel_smoothness = Math.max(0, 1 - (features.accel_std / (features.avg_accel + 0.01))) * 100;
+    const vertical_smoothness = Math.max(0, 1 - (features.vertical_velocity_std / (features.avg_speed + 0.01))) * 100;
+    const smoothness_component = (accel_smoothness * 0.6 + vertical_smoothness * 0.4) * 0.25;
+    
+    // 4. Posture component (20% weight)
+    const lateral_target = 0.15;
+    const lateral_deviation = Math.abs(features.lateral_movement - lateral_target);
+    const lateral_score = Math.max(0, 1 - (lateral_deviation / lateral_target)) * 100;
+    
+    const vertical_bounce_penalty = Math.min(features.vertical_range / 0.3, 1.0) * 100;
+    const posture_score = lateral_score * 0.6 + (100 - vertical_bounce_penalty) * 0.4;
+    const posture_component = posture_score * 0.20;
+    
+    // Combine all components
+    const nonchalance_score = speed_component + rhythm_component + smoothness_component + posture_component;
+    
+    return Math.round(nonchalance_score);
+}
+
+// Calculate BAC (Blood Alcohol Content) - returns realistic values 0.00% to ~0.20%
+function estimateBAC() {
+    const features = {
+        avg_speed: parseFloat(document.getElementById('demo-avg-speed').textContent),
+        speed_std: parseFloat(document.getElementById('demo-speed-std').textContent),
+        lateral_movement: parseFloat(document.getElementById('demo-lateral').textContent),
+        vertical_velocity_std: parseFloat(document.getElementById('demo-vert-velocity-std').textContent),
+        accel_std: parseFloat(document.getElementById('demo-accel-std').textContent),
+        step_rhythm: parseFloat(document.getElementById('demo-step-rhythm').textContent),
+        height_std: parseFloat(document.getElementById('demo-height-std').textContent),
+        vertical_range: parseFloat(document.getElementById('demo-vertical-range').textContent)
+    };
+    
+    // Baseline "sober" values
+    const baseline = {
+        avg_speed: 1.35,
+        lateral_movement: 0.06,
+        vertical_velocity_std: 0.11,
+        speed_std: 0.18,
+        accel_std: 0.15,
+        step_rhythm: 1.9,
+        height_std: 0.04,
+        vertical_range: 0.08
+    };
+    
+    let impairment_score = 0;
+    
+    // 1. Excessive lateral sway (35% weight) - drunk people sway more
+    const sway_excess = Math.max(0, (features.lateral_movement - baseline.lateral_movement) / baseline.lateral_movement);
+    impairment_score += Math.min(sway_excess * 2, 1.0) * 0.35;
+    
+    // 2. Speed inconsistency (25% weight) - drunk walking is erratic
+    const speed_variance = Math.max(0, (features.speed_std - baseline.speed_std) / baseline.speed_std);
+    impairment_score += Math.min(speed_variance * 1.5, 1.0) * 0.25;
+    
+    // 3. Acceleration jerkiness (20% weight) - lack of motor control
+    const accel_excess = Math.max(0, (features.accel_std - baseline.accel_std) / baseline.accel_std);
+    impairment_score += Math.min(accel_excess * 1.5, 1.0) * 0.20;
+    
+    // 4. Vertical instability (15% weight) - bobbing up and down
+    const vertical_excess = Math.max(0, (features.vertical_velocity_std - baseline.vertical_velocity_std) / baseline.vertical_velocity_std);
+    impairment_score += Math.min(vertical_excess * 1.2, 1.0) * 0.15;
+    
+    // 5. Overall speed reduction (5% weight) - intoxicated people often walk slower
+    if (features.avg_speed < baseline.avg_speed * 0.9) {
+        const speed_reduction = (baseline.avg_speed - features.avg_speed) / baseline.avg_speed;
+        impairment_score += Math.min(speed_reduction * 2, 1.0) * 0.05;
+    }
+    
+    // Convert impairment_score (0-1) to realistic BAC (0.00% to 0.20%)
+    // 0.08% is legal limit, 0.15% is very drunk, 0.20% is dangerously high
+    const bac = impairment_score * 0.20;
+    
+    // Return as percentage string with 2 decimal places (e.g., "0.05")
+    return bac.toFixed(2);
+}
+
+// Calculate and BAC Button Progress Functionality
+function initCalculateButtons() {
+    const calculateBtn = document.getElementById('calculate-nonchalance-btn');
+    const bacBtn = document.getElementById('estimate-bac-btn');
+    
+    function setupProgressButton(button) {
+        if (!button) return;
+        
+        const progressBar = button.querySelector('.progress-bar-bg');
+        const textSpan = button.querySelector('span');
+        
+        if (!progressBar || !textSpan) return;
+        
+        const originalText = textSpan.textContent;
+        
+        button.addEventListener('click', (e) => {
+            // Prevent if already running
+            if (button.classList.contains('calculating')) return;
+            
+            button.classList.add('calculating');
+            button.style.cursor = 'wait';
+            
+            // Make button purple (secondary color) instead of transparent
+            button.style.background = '#7c3aed';
+            button.style.border = '1px solid var(--primary)';
+            
+            // Determine the loading text based on button
+            const loadingText = originalText.includes('Nonchalance') ? 'Calculating' : 'Estimating';
+            
+            // Animate dots
+            let dotCount = 0;
+            textSpan.textContent = loadingText;
+            
+            const dotInterval = setInterval(() => {
+                dotCount = (dotCount + 1) % 4;
+                textSpan.textContent = loadingText + '.'.repeat(dotCount);
+            }, 500);
+            
+            // Reset progress bar
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+            
+            // Force reflow to restart animation
+            progressBar.offsetHeight;
+            
+            // Start progress animation (4 seconds for longer delay)
+            progressBar.style.transition = 'width 4s linear';
+            progressBar.style.width = '100%';
+            
+            // After 4 seconds, show calculated number
+            setTimeout(() => {
+                // Stop dot animation
+                clearInterval(dotInterval);
+                
+                // Calculate based on button type
+                let displayText;
+                if (originalText.includes('Nonchalance')) {
+                    const calculatedNum = calculateNonchalance();
+                    displayText = calculatedNum + '%';
+                } else {
+                    // Calculate BAC (returns value like "0.05")
+                    const bacValue = estimateBAC();
+                    displayText = bacValue + '%';
+                }
+                
+                // Make number bigger and bolder
+                textSpan.style.fontSize = '2rem';
+                textSpan.style.fontWeight = '900';
+                textSpan.textContent = displayText;
+                
+                // Keep the cyan background (don't hide progress bar)
+                button.style.background = 'var(--primary)';
+                button.style.border = 'none';
+                
+                // After 6 seconds showing the number (longer), reset
+                setTimeout(() => {
+                    textSpan.textContent = originalText;
+                    textSpan.style.fontSize = '';
+                    textSpan.style.fontWeight = '';
+                    button.classList.remove('calculating');
+                    button.style.cursor = 'pointer';
+                    
+                    // Reset progress bar
+                    progressBar.style.width = '0%';
+                    progressBar.style.transition = 'none';
+                }, 6000);
+            }, 4000);
+        });
+    }
+    
+    setupProgressButton(calculateBtn);
+    setupProgressButton(bacBtn);
+}
+
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     initStatCounters();
@@ -328,6 +679,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initParallax();
     initFeatureCards();
     initEyeTracking();
+    initTriggerButton();
+    initRejectButton();
+    initCalculateButtons();
 });
 
 // Add button click handlers

@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CYCLOPS - Demo</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* White logo for demo page */
+        .navbar .logo-icon,
+        .navbar .logo-text {
+            color: #ffffff !important;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -29,104 +36,161 @@
     <!-- Demo Section -->
     <section style="min-height: 100vh; padding: 8rem 2rem 4rem; max-width: 1600px; margin: 0 auto;">
         <div style="margin-bottom: 2rem;">
-            <div class="hero-badge" style="margin-bottom: 1rem;">
-                <span class="badge-dot"></span>
-                LIVE DEMO
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 2rem;">
+                <!-- Left side: LIVE DEMO and Trigger -->
+                <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                    <div class="hero-badge">
+                        <span class="badge-dot"></span>
+                        LIVE DEMO
+                    </div>
+                    <button id="trigger-btn" class="btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.875rem;">
+                        <span>Trigger</span>
+                    </button>
+                    <button id="reject-btn" class="btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.875rem; background: #ef4444;">
+                        <span>Reject</span>
+                    </button>
+                </div>
+                
+                <!-- Center: Gait Analysis Demo title -->
+                <h1 class="hero-title" style="font-size: 3rem; margin: 0; text-align: center; flex: 2;">
+                    Gait Analysis <span class="gradient-text">Demo</span>
+                </h1>
+                
+                <!-- Right side: spacer for balance -->
+                <div style="flex: 1;"></div>
             </div>
-            <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 1rem;">
-                Gait Analysis <span class="gradient-text">Demo</span>
-            </h1>
         </div>
 
         <!-- Main Demo Layout -->
-        <div style="display: grid; grid-template-columns: 250px 220px 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+        <div style="display: grid; grid-template-columns: 250px minmax(380px, 450px) 1fr; gap: 1.5rem; margin-bottom: 2rem;">
             <!-- Left: Portrait + Button -->
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                 <!-- Portrait -->
-                <div style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; height: 320px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">
-                    Subject Portrait
+                <div id="subject-portrait" style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; height: 320px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; overflow: hidden; position: relative;">
+                    <span id="portrait-placeholder">Subject Portrait</span>
+                    <img id="portrait-image" style="display: none; width: 100%; height: 100%; object-fit: cover;" />
+                    <!-- Big X Overlay -->
+                    <div id="reject-x" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 10;">
+                        <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+                            <line x1="20" y1="20" x2="80" y2="80" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/>
+                            <line x1="80" y1="20" x2="20" y2="80" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Authorization Status -->
+                <div id="auth-status" style="background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; display: none; align-items: center; gap: 0.75rem; transition: all 0.3s ease;">
+                    <svg id="auth-checkmark" viewBox="0 0 24 24" style="width: 32px; height: 32px; flex-shrink: 0;">
+                        <circle cx="12" cy="12" r="10" fill="#10b981" stroke="#10b981" stroke-width="2"/>
+                        <path d="M8 12l3 3 5-5" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <svg id="auth-reject-x" viewBox="0 0 24 24" style="width: 32px; height: 32px; flex-shrink: 0; display: none;">
+                        <circle cx="12" cy="12" r="10" fill="#ef4444" stroke="#ef4444" stroke-width="2"/>
+                        <line x1="8" y1="8" x2="16" y2="16" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="16" y1="8" x2="8" y2="16" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                    <div style="flex: 1;">
+                        <div id="auth-message" style="color: #10b981; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Calculate Button -->
-                <button class="btn-primary" style="padding: 1rem 2rem; font-size: 1rem; width: 100%; justify-content: center;">
-                    <span>Calculate Chalance</span>
+                <button id="calculate-nonchalance-btn" class="btn-primary" style="padding: 1rem 2rem; font-size: 1rem; width: 100%; height: 60px; justify-content: center; position: relative; overflow: hidden; transition: background 0.3s ease;">
+                    <div class="progress-bar-bg" style="position: absolute; left: 0; top: 0; width: 0%; height: 100%; background: var(--primary); pointer-events: none; z-index: 1;"></div>
+                    <span style="position: relative; z-index: 2; display: flex; align-items: center; justify-content: center;">Calculate Nonchalance</span>
+                </button>
+                
+                <!-- Estimate B.A.C. Button -->
+                <button id="estimate-bac-btn" class="btn-primary" style="padding: 1rem 2rem; font-size: 1rem; width: 100%; height: 60px; justify-content: center; position: relative; overflow: hidden; transition: background 0.3s ease;">
+                    <div class="progress-bar-bg" style="position: absolute; left: 0; top: 0; width: 0%; height: 100%; background: var(--primary); pointer-events: none; z-index: 1;"></div>
+                    <span style="position: relative; z-index: 2; display: flex; align-items: center; justify-content: center;">Estimate B.A.C.</span>
                 </button>
             </div>
 
-            <!-- Middle: Stat Boxes -->
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <!-- Middle: Stat Boxes (4 rows x 2 columns) -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 1fr); gap: 1rem;">
                 <!-- Avg Speed -->
-                <div class="metric" style="padding: 1.25rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; flex: 1;">
+                <div class="metric" style="padding: 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
                     <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Avg Speed</div>
-                    <div class="metric-value" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
+                    <div class="metric-value" style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">
                         <span id="demo-avg-speed">1.35</span>
-                        <span style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
+                        <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
                     </div>
                 </div>
 
                 <!-- Avg Acceleration -->
-                <div class="metric" style="padding: 1.25rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; flex: 1;">
+                <div class="metric" style="padding: 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
                     <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Avg Accel</div>
-                    <div class="metric-value" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
+                    <div class="metric-value" style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">
                         <span id="demo-avg-accel">0.42</span>
-                        <span style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s²</span>
+                        <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s²</span>
                     </div>
                 </div>
 
                 <!-- Avg Height -->
-                <div class="metric" style="padding: 1.25rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; flex: 1;">
+                <div class="metric" style="padding: 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
                     <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Avg Height</div>
-                    <div class="metric-value" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
+                    <div class="metric-value" style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">
                         <span id="demo-avg-height">1.68</span>
-                        <span style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m</span>
+                        <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m</span>
+                    </div>
+                </div>
+
+                <!-- Step Count -->
+                <div class="metric" style="padding: 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Step Count</div>
+                    <div class="metric-value" style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">
+                        <span id="demo-step-count">42</span>
+                        <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">steps</span>
+                    </div>
+                </div>
+
+                <!-- Max Speed -->
+                <div class="metric" style="padding: 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Max Speed</div>
+                    <div class="metric-value" style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">
+                        <span id="demo-max-speed">1.85</span>
+                        <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
+                    </div>
+                </div>
+
+                <!-- Min Speed -->
+                <div class="metric" style="padding: 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Min Speed</div>
+                    <div class="metric-value" style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">
+                        <span id="demo-min-speed">0.92</span>
+                        <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
+                    </div>
+                </div>
+
+                <!-- Speed Range -->
+                <div class="metric" style="padding: 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Speed Range</div>
+                    <div class="metric-value" style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">
+                        <span id="demo-speed-range">0.93</span>
+                        <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
+                    </div>
+                </div>
+
+                <!-- Speed Std Dev -->
+                <div class="metric" style="padding: 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
+                    <div class="metric-label" style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Speed Std Dev</div>
+                    <div class="metric-value" style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">
+                        <span id="demo-speed-std">0.18</span>
+                        <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
                     </div>
                 </div>
             </div>
 
             <!-- Right: LiDAR Visualization -->
-            <div style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; max-width: 600px;">
+            <div style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">
                 LiDAR Visualization
             </div>
         </div>
 
         <!-- Stats Grid -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
-            <!-- Max Speed -->
-            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Max Speed</div>
-                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-max-speed">1.85</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
-                </div>
-            </div>
-
-            <!-- Min Speed -->
-            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Min Speed</div>
-                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-min-speed">0.92</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
-                </div>
-            </div>
-
-            <!-- Speed Range -->
-            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Speed Range</div>
-                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-speed-range">0.93</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
-                </div>
-            </div>
-
-            <!-- Speed Std Dev -->
-            <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
-                <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Speed Std Dev</div>
-                <div class="metric-value" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
-                    <span id="demo-speed-std">0.18</span>
-                    <span style="font-size: 0.875rem; font-weight: 400; color: var(--text-secondary); margin-left: 0.25rem;">m/s</span>
-                </div>
-            </div>
-
             <!-- Height Std Dev -->
             <div class="metric" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;">
                 <div class="metric-label" style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem;">Height Std Dev</div>

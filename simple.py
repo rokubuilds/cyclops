@@ -1,121 +1,21 @@
 #!/usr/bin/env python3
 """
-Combined IMU Server + Gait Recognition System
-- Enrollment phase first
-- Then monitoring starts with Flask server
+SIMPLE GAIT RECOGNITION - Fresh start every time
+8 features: speed (avg, std, max, min, range) + height (avg, std, range)
+Enroll users, then straight to monitoring
 """
-import json
+
 import struct
-import time
-from collections import deque
-from threading import Thread, Lock
 import zmq
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
-from flask import Flask, jsonify, send_from_directory
-from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app)
+from collections import deque
+import time
 
 # ============================================================================
-# IMU Configuration
-# ============================================================================
-IMU_ENDPOINT = "tcp://192.168.1.249:5556"
-Q_IS_WXYZ = False
-PACK_FMT = "<IIIffffffffff"  # 3*uint32 + 10*float32 = 12 + 40 = 52 bytes
-PACK_LEN = 52
-
-# Global IMU data storage
-imu_data = {
-    'gyro': {'x': deque(maxlen=100), 'y': deque(maxlen=100), 'z': deque(maxlen=100)},
-    'accel': {'x': deque(maxlen=100), 'y': deque(maxlen=100), 'z': deque(maxlen=100)},
-    'quat': {'w': deque(maxlen=100), 'x': deque(maxlen=100), 'y': deque(maxlen=100), 'z': deque(maxlen=100)},
-    'timestamps': deque(maxlen=100),
-    'connected': False,
-    'last_update': 0
-}
-imu_data_lock = Lock()
-
-# Global gait prediction storage
-current_prediction = {
-    'name': 'Unknown',
-    'confidence': 0.0,
-    'last_update': 0
-}
-prediction_lock = Lock()
-
-# ============================================================================
-# IMU FUNCTIONS
-# ============================================================================
-
-def parse_imu(packet):
-    """Return dict with seq, t (seconds), quat=(w,x,y,z), gyro=(x,y,z), accel=(x,y,z)."""
-    if len(packet) < PACK_LEN:
-        return None
-    seq, sec, nsec, *floats = struct.unpack(PACK_FMT, packet[:PACK_LEN])
-    if Q_IS_WXYZ:
-        qw, qx, qy, qz = floats[0:4]
-    else:
-        qx, qy, qz, qw = floats[0:4]
-    gx, gy, gz = floats[4:7]
-    ax, ay, az = floats[7:10]
-    # use device time if nonzero, else wall time
-    t = sec + nsec * 1e-9
-    if t == 0:
-        t = time.time()
-    return dict(
-        seq=seq,
-        t=t,
-        quat=(qw, qx, qy, qz),
-        gyro=(gx, gy, gz),
-        accel=(ax, ay, az),
-    )
-
-def zmq_imu_worker():
-    """Worker thread to receive IMU ZMQ data"""
-    global imu_data
-
-    ctx = zmq.Context()
-    sub = ctx.socket(zmq.SUB)
-    sub.connect(IMU_ENDPOINT)
-    sub.setsockopt(zmq.SUBSCRIBE, b"")
-    sub.RCVTIMEO = 1000  # 1 second timeout
-
-    print(f"✅ IMU ZMQ worker started, listening on {IMU_ENDPOINT}")
-
-    while True:
-        try:
-            pkt = sub.recv()
-            d = parse_imu(pkt)
-            if d:
-                with imu_data_lock:
-                    imu_data['timestamps'].append(d['t'])
-                    imu_data['gyro']['x'].append(d['gyro'][0])
-                    imu_data['gyro']['y'].append(d['gyro'][1])
-                    imu_data['gyro']['z'].append(d['gyro'][2])
-                    imu_data['accel']['x'].append(d['accel'][0])
-                    imu_data['accel']['y'].append(d['accel'][1])
-                    imu_data['accel']['z'].append(d['accel'][2])
-                    imu_data['quat']['w'].append(d['quat'][0])
-                    imu_data['quat']['x'].append(d['quat'][1])
-                    imu_data['quat']['y'].append(d['quat'][2])
-                    imu_data['quat']['z'].append(d['quat'][3])
-                    imu_data['last_update'] = time.time()
-                    imu_data['connected'] = True
-        except zmq.Again:
-            # Timeout - check if we've lost connection
-            with imu_data_lock:
-                if time.time() - imu_data['last_update'] > 5.0:
-                    imu_data['connected'] = False
-        except Exception as e:
-            print(f"IMU ZMQ error: {e}")
-            time.sleep(1)
-
-# ============================================================================
-# LIDAR DATA STREAM
+# DATA STREAM
 # ============================================================================
 
 class L2DataStream:
@@ -124,7 +24,7 @@ class L2DataStream:
         self.pc_socket = self.context.socket(zmq.SUB)
         self.pc_socket.connect(f"tcp://{ip}:{port}")
         self.pc_socket.setsockopt(zmq.SUBSCRIBE, b"")
-        print(f"✅ LiDAR connected to {ip}:{port}")
+        print(f"✅ Connected to {ip}:{port}")
 
     def get_point_cloud(self):
         data = self.pc_socket.recv()
@@ -211,7 +111,7 @@ class PersonDetector:
         self.history.clear()
 
 # ============================================================================
-# FEATURE EXTRACTION
+# FEATURE EXTRACTION - 8 simple features
 # ============================================================================
 
 class GaitFeatures:
@@ -385,7 +285,7 @@ class GaitIdentifier:
         return "Unknown", 0.0
 
 # ============================================================================
-# MAIN GAIT SYSTEM
+# MAIN SYSTEM
 # ============================================================================
 
 class SimpleGaitSystem:
@@ -441,26 +341,24 @@ class SimpleGaitSystem:
 
         return True
 
-    def monitor_worker(self):
-        """Monitor and identify in background thread"""
-        global current_prediction
-
+    def monitor(self):
+        """Monitor and identify"""
         if not self.identifier.trained:
             print("❌ Model not trained yet!")
             return
 
         print("\n" + "="*60)
-        print("🎬 MONITORING MODE (Background Thread)")
+        print("🎬 MONITORING MODE")
         print("="*60)
         print(f"{len(self.identifier.users)} users loaded")
-        print("Predictions available at /predict endpoint\n")
+        print("Press Ctrl+C to stop\n")
 
         self.detector.clear()
         last_pred = time.time()
         frame_count = 0
 
-        while True:
-            try:
+        try:
+            while True:
                 pc = self.stream.get_point_cloud()
                 detection = self.detector.detect_person(pc)
                 history = self.detector.update_history(detection, pc['timestamp'])
@@ -473,12 +371,6 @@ class SimpleGaitSystem:
                         # Double check features are valid
                         if features is not None:
                             name, conf = self.identifier.identify(features)
-
-                            # Update global prediction
-                            with prediction_lock:
-                                current_prediction['name'] = name
-                                current_prediction['confidence'] = conf
-                                current_prediction['last_update'] = time.time()
 
                             if name not in ["Unknown", "Not trained"]:
                                 print("\n" + "╔" + "═" * 58 + "╗")
@@ -498,72 +390,8 @@ class SimpleGaitSystem:
                     hist_len = len(self.detector.history)
                     print(f"\r{status} | History: {hist_len} frames", end='')
 
-            except Exception as e:
-                print(f"\n❌ Monitor error: {e}")
-                time.sleep(1)
-
-# ============================================================================
-# FLASK ROUTES
-# ============================================================================
-
-@app.route('/')
-def index():
-    return send_from_directory('.', 'demo.html')
-
-@app.route('/styles.css')
-def styles():
-    return send_from_directory('.', 'styles.css')
-
-@app.route('/script.js')
-def script():
-    return send_from_directory('.', 'script.js')
-
-@app.route('/api/imu')
-def get_imu_data():
-    """Get current IMU data"""
-    with imu_data_lock:
-        # Convert deques to lists for JSON serialization
-        data = {
-            'connected': imu_data['connected'],
-            'gyro': {
-                'x': list(imu_data['gyro']['x']),
-                'y': list(imu_data['gyro']['y']),
-                'z': list(imu_data['gyro']['z'])
-            },
-            'accel': {
-                'x': list(imu_data['accel']['x']),
-                'y': list(imu_data['accel']['y']),
-                'z': list(imu_data['accel']['z'])
-            },
-            'quat': {
-                'w': list(imu_data['quat']['w']),
-                'x': list(imu_data['quat']['x']),
-                'y': list(imu_data['quat']['y']),
-                'z': list(imu_data['quat']['z'])
-            },
-            'timestamps': list(imu_data['timestamps'])
-        }
-    return jsonify(data)
-
-@app.route('/api/status')
-def get_status():
-    """Get connection status"""
-    with imu_data_lock:
-        return jsonify({
-            'connected': imu_data['connected'],
-            'last_update': imu_data['last_update'],
-            'data_points': len(imu_data['timestamps'])
-        })
-
-@app.route('/api/predict')
-def get_prediction():
-    """Get current gait prediction"""
-    with prediction_lock:
-        return jsonify({
-            'name': current_prediction['name'],
-            'confidence': current_prediction['confidence'],
-            'last_update': current_prediction['last_update']
-        })
+        except KeyboardInterrupt:
+            print("\n\n👋 Stopped monitoring")
 
 # ============================================================================
 # MAIN
@@ -571,17 +399,14 @@ def get_prediction():
 
 if __name__ == "__main__":
     print("="*60)
-    print("🔐 COMBINED GAIT RECOGNITION + IMU SERVER")
+    print("🔐 SIMPLE GAIT RECOGNITION")
     print("="*60)
-    print("8 features: speed, height")
+    print("14 features: speed, height, accel, vertical, rhythm, sway")
     print("100 samples per user, BALANCED class weights")
+    print("Fresh start every run")
     print("="*60)
 
     system = SimpleGaitSystem(ip='192.168.1.249')
-
-    # ========================================================================
-    # PHASE 1: ENROLLMENT
-    # ========================================================================
 
     # Enroll users until we have at least 2
     while len(system.identifier.users) < 2:
@@ -593,7 +418,7 @@ if __name__ == "__main__":
             exit(0)
 
         if name:
-            system.enroll_user(name, target_samples=100)
+            system.enroll_user(name, target_samples=100)  # Back to 100
         else:
             print("❌ Invalid name")
 
@@ -608,37 +433,15 @@ if __name__ == "__main__":
         if choice == 'y':
             name = input("👤 Enter name: ").strip()
             if name:
-                system.enroll_user(name, target_samples=100)
+                system.enroll_user(name, target_samples=100)  # Back to 100
             else:
                 print("❌ Invalid name")
         else:
             break
 
     # Train model
-    if not system.identifier.train():
+    if system.identifier.train():
+        # Start monitoring
+        system.monitor()
+    else:
         print("\n❌ Training failed!")
-        exit(1)
-
-    # ========================================================================
-    # PHASE 2: MONITORING + FLASK SERVER
-    # ========================================================================
-
-    print("\n" + "="*60)
-    print("🚀 STARTING MONITORING MODE + FLASK SERVER")
-    print("="*60)
-
-    # Start IMU ZMQ worker thread
-    imu_thread = Thread(target=zmq_imu_worker, daemon=True)
-    imu_thread.start()
-
-    # Start gait monitoring worker thread
-    monitor_thread = Thread(target=system.monitor_worker, daemon=True)
-    monitor_thread.start()
-
-    # Start Flask server (this blocks)
-    print("\n✅ Flask server starting on http://localhost:8080")
-    print("   📊 IMU data: http://localhost:8080/api/imu")
-    print("   👤 Predictions: http://localhost:8080/api/predict")
-    print("\nPress Ctrl+C to stop\n")
-
-    app.run(host='0.0.0.0', port=8080, debug=False)

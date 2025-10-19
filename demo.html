@@ -62,37 +62,12 @@
         </div>
 
         <!-- Main Demo Layout -->
-        <div style="display: grid; grid-template-columns: 250px minmax(380px, 450px) 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+        <div style="display: grid; grid-template-columns: 450px 220px 1fr; gap: 1.5rem; margin-bottom: 2rem;">
             <!-- Left: Portrait + Button -->
             <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                 <!-- Portrait -->
-                <div id="subject-portrait" style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; height: 320px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; overflow: hidden; position: relative;">
-                    <span id="portrait-placeholder">Subject Portrait</span>
-                    <img id="portrait-image" style="display: none; width: 100%; height: 100%; object-fit: cover;" />
-                    <!-- Big X Overlay -->
-                    <div id="reject-x" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 10;">
-                        <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
-                            <line x1="20" y1="20" x2="80" y2="80" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/>
-                            <line x1="80" y1="20" x2="20" y2="80" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                </div>
-                
-                <!-- Authorization Status -->
-                <div id="auth-status" style="background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 8px; padding: 1rem; display: none; align-items: center; gap: 0.75rem; transition: all 0.3s ease;">
-                    <svg id="auth-checkmark" viewBox="0 0 24 24" style="width: 32px; height: 32px; flex-shrink: 0;">
-                        <circle cx="12" cy="12" r="10" fill="#10b981" stroke="#10b981" stroke-width="2"/>
-                        <path d="M8 12l3 3 5-5" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <svg id="auth-reject-x" viewBox="0 0 24 24" style="width: 32px; height: 32px; flex-shrink: 0; display: none;">
-                        <circle cx="12" cy="12" r="10" fill="#ef4444" stroke="#ef4444" stroke-width="2"/>
-                        <line x1="8" y1="8" x2="16" y2="16" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-                        <line x1="16" y1="8" x2="8" y2="16" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                    <div style="flex: 1;">
-                        <div id="auth-message" style="color: #10b981; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                        </div>
-                    </div>
+                <div style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; height: 700px; width: 450px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">
+                    Subject Portrait
                 </div>
                 
                 <!-- Calculate Button -->
@@ -183,9 +158,62 @@
                 </div>
             </div>
 
-            <!-- Right: LiDAR Visualization -->
-            <div style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em;">
-                LiDAR Visualization
+            <!-- Right: Sensor Status -->
+            <div style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; max-width: 600px;">
+                <div style="color: var(--text-secondary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">
+                    Sensor Status
+                </div>
+                
+                <!-- IMU Charts Container -->
+                <div style="display: grid; gap: 1rem;">
+                    <!-- Gyroscope Chart -->
+                    <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 1rem;">
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            Angular Velocity (rad/s) - X: cyan, Y: green, Z: orange
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                            <span style="font-size: 0.7rem; color: var(--text-secondary); writing-mode: vertical-rl; text-orientation: mixed;">Sensor Value</span>
+                            <div style="position: relative; width: 100%; height: 107px; overflow: hidden;">
+                                <canvas id="gyroChart" style="position: absolute; top: 0; left: 0; width: 100%; height: 107px !important; max-height: 107px !important;"></canvas>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.7rem; color: var(--text-secondary); text-align: center; margin-top: 0.25rem;">Time (samples)</div>
+                    </div>
+                    
+                    <!-- Accelerometer Chart -->
+                    <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 1rem;">
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            Linear Acceleration (m/s²) - X: cyan, Y: green, Z: orange
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                            <span style="font-size: 0.7rem; color: var(--text-secondary); writing-mode: vertical-rl; text-orientation: mixed;">Sensor Value</span>
+                            <div style="position: relative; width: 100%; height: 107px; overflow: hidden;">
+                                <canvas id="accelChart" style="position: absolute; top: 0; left: 0; width: 100%; height: 107px !important; max-height: 107px !important;"></canvas>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.7rem; color: var(--text-secondary); text-align: center; margin-top: 0.25rem;">Time (samples)</div>
+                    </div>
+                    
+                    <!-- Quaternion Chart -->
+                    <div style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 1rem;">
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            Quaternion Orientation - W: cyan, X: green, Y: orange, Z: yellow
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                            <span style="font-size: 0.7rem; color: var(--text-secondary); writing-mode: vertical-rl; text-orientation: mixed;">Sensor Value</span>
+                            <div style="position: relative; width: 100%; height: 107px; overflow: hidden;">
+                                <canvas id="quatChart" style="position: absolute; top: 0; left: 0; width: 100%; height: 107px !important; max-height: 107px !important;"></canvas>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.7rem; color: var(--text-secondary); text-align: center; margin-top: 0.25rem;">Time (samples)</div>
+                    </div>
+                </div>
+                
+                <!-- Connection Status -->
+                <div style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <div id="connectionStatus" style="width: 8px; height: 8px; border-radius: 50%; background: var(--error);"></div>
+                    <span style="font-size: 0.75rem; color: var(--text-secondary);">Disconnected</span>
+                </div>
             </div>
         </div>
 
@@ -256,7 +284,247 @@
         </div>
     </section>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
+    <script>
+        // IMU Data Visualization
+        let gyroChart, accelChart, quatChart;
+        let connectionStatus = false;
+        
+        // Initialize charts
+        function initCharts() {
+            const chartOptions = {
+                responsive: false, // Disable responsive behavior
+                maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'var(--text-primary)',
+                            font: { size: 10 }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        display: false
+                    },
+                    y: {
+                        display: false
+                    }
+                },
+                elements: {
+                    point: { radius: 0 }
+                },
+                animation: {
+                    duration: 0
+                }
+            };
+            
+            // Gyroscope Chart
+            const gyroCtx = document.getElementById('gyroChart').getContext('2d');
+            gyroChart = new Chart(gyroCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        { label: 'gx', data: [], borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)' },
+                        { label: 'gy', data: [], borderColor: '#00ff88', backgroundColor: 'rgba(0, 255, 136, 0.1)' },
+                        { label: 'gz', data: [], borderColor: '#ff6b35', backgroundColor: 'rgba(255, 107, 53, 0.1)' }
+                    ]
+                },
+                options: { ...chartOptions }
+            });
+            
+            // Accelerometer Chart
+            const accelCtx = document.getElementById('accelChart').getContext('2d');
+            accelChart = new Chart(accelCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        { label: 'ax', data: [], borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)' },
+                        { label: 'ay', data: [], borderColor: '#00ff88', backgroundColor: 'rgba(0, 255, 136, 0.1)' },
+                        { label: 'az', data: [], borderColor: '#ff6b35', backgroundColor: 'rgba(255, 107, 53, 0.1)' }
+                    ]
+                },
+                options: { ...chartOptions }
+            });
+            
+            // Quaternion Chart
+            const quatCtx = document.getElementById('quatChart').getContext('2d');
+            quatChart = new Chart(quatCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        { label: 'qw', data: [], borderColor: '#00d4ff', backgroundColor: 'rgba(0, 212, 255, 0.1)' },
+                        { label: 'qx', data: [], borderColor: '#00ff88', backgroundColor: 'rgba(0, 255, 136, 0.1)' },
+                        { label: 'qy', data: [], borderColor: '#ff6b35', backgroundColor: 'rgba(255, 107, 53, 0.1)' },
+                        { label: 'qz', data: [], borderColor: '#ffd700', backgroundColor: 'rgba(255, 215, 0, 0.1)' }
+                    ]
+                },
+                options: { ...chartOptions }
+            });
+        }
+        
+        
+        // Update connection status
+        function updateConnectionStatus(connected) {
+            connectionStatus = connected;
+            const statusEl = document.getElementById('connectionStatus');
+            const textEl = statusEl.nextElementSibling;
+            
+            if (connected) {
+                statusEl.style.background = 'var(--success)';
+                textEl.textContent = 'Connected';
+            } else {
+                statusEl.style.background = 'var(--error)';
+                textEl.textContent = 'Disconnected';
+            }
+        }
+        
+        // Fetch real IMU data from server
+        async function fetchIMUData() {
+            try {
+                const response = await fetch('http://localhost:8080/api/imu');
+                const data = await response.json();
+                
+                if (data.connected && data.timestamps.length > 0) {
+                    // Keep only the last 50 data points for sliding window
+                    const maxPoints = 50;
+                    const startIdx = Math.max(0, data.timestamps.length - maxPoints);
+                    
+                    // Extract recent data
+                    const recentTimestamps = data.timestamps.slice(startIdx);
+                    const recentGyroX = data.gyro.x.slice(startIdx);
+                    const recentGyroY = data.gyro.y.slice(startIdx);
+                    const recentGyroZ = data.gyro.z.slice(startIdx);
+                    const recentAccelX = data.accel.x.slice(startIdx);
+                    const recentAccelY = data.accel.y.slice(startIdx);
+                    const recentAccelZ = data.accel.z.slice(startIdx);
+                    const recentQuatW = data.quat.w.slice(startIdx);
+                    const recentQuatX = data.quat.x.slice(startIdx);
+                    const recentQuatY = data.quat.y.slice(startIdx);
+                    const recentQuatZ = data.quat.z.slice(startIdx);
+                    
+                    // Create time labels (just indices for cleaner display)
+                    const timeLabels = recentTimestamps.map((_, i) => i);
+                    
+                    // Update charts with real data
+                    gyroChart.data.labels = timeLabels;
+                    gyroChart.data.datasets[0].data = recentGyroX;
+                    gyroChart.data.datasets[1].data = recentGyroY;
+                    gyroChart.data.datasets[2].data = recentGyroZ;
+                    
+                    accelChart.data.labels = timeLabels;
+                    accelChart.data.datasets[0].data = recentAccelX;
+                    accelChart.data.datasets[1].data = recentAccelY;
+                    accelChart.data.datasets[2].data = recentAccelZ;
+                    
+                    quatChart.data.labels = timeLabels;
+                    quatChart.data.datasets[0].data = recentQuatW;
+                    quatChart.data.datasets[1].data = recentQuatX;
+                    quatChart.data.datasets[2].data = recentQuatY;
+                    quatChart.data.datasets[3].data = recentQuatZ;
+                    
+                    // Update all charts at once
+                    gyroChart.update('none');
+                    accelChart.update('none');
+                    quatChart.update('none');
+                    
+                    updateConnectionStatus(true);
+                } else {
+                    updateConnectionStatus(false);
+                }
+            } catch (error) {
+                console.error('Failed to fetch IMU data:', error);
+                updateConnectionStatus(false);
+            }
+        }
+        
+        // Fallback simulation for demo when server is not available
+        function simulateIMUData() {
+            const now = Date.now() / 1000;
+            const maxPoints = 50;
+            const timeLabels = [];
+            const gyroData = { gx: [], gy: [], gz: [] };
+            const accelData = { ax: [], ay: [], az: [] };
+            const quatData = { qw: [], qx: [], qy: [], qz: [] };
+            
+            // Generate demo data with fixed window size
+            for (let i = 0; i < maxPoints; i++) {
+                const t = now - (maxPoints - 1 - i) * 0.1;
+                timeLabels.push(i); // Use index instead of timestamp for cleaner display
+                
+                // Simulate sensor data
+                gyroData.gx.push(Math.sin(t * 0.5) * 2 + Math.random() * 0.5);
+                gyroData.gy.push(Math.cos(t * 0.3) * 1.5 + Math.random() * 0.3);
+                gyroData.gz.push(Math.sin(t * 0.7) * 1.8 + Math.random() * 0.4);
+                
+                accelData.ax.push(Math.sin(t * 0.4) * 3 + Math.random() * 0.6);
+                accelData.ay.push(Math.cos(t * 0.6) * 2.5 + Math.random() * 0.5);
+                accelData.az.push(9.8 + Math.sin(t * 0.2) * 2 + Math.random() * 0.3);
+                
+                quatData.qw.push(Math.cos(t * 0.1));
+                quatData.qx.push(Math.sin(t * 0.1) * 0.5);
+                quatData.qy.push(Math.cos(t * 0.15) * 0.3);
+                quatData.qz.push(Math.sin(t * 0.12) * 0.4);
+            }
+            
+            // Update charts
+            gyroChart.data.labels = timeLabels;
+            gyroChart.data.datasets[0].data = gyroData.gx;
+            gyroChart.data.datasets[1].data = gyroData.gy;
+            gyroChart.data.datasets[2].data = gyroData.gz;
+            
+            accelChart.data.labels = timeLabels;
+            accelChart.data.datasets[0].data = accelData.ax;
+            accelChart.data.datasets[1].data = accelData.ay;
+            accelChart.data.datasets[2].data = accelData.az;
+            
+            quatChart.data.labels = timeLabels;
+            quatChart.data.datasets[0].data = quatData.qw;
+            quatChart.data.datasets[1].data = quatData.qx;
+            quatChart.data.datasets[2].data = quatData.qy;
+            quatChart.data.datasets[3].data = quatData.qz;
+            
+            // Update all charts at once
+            gyroChart.update('none');
+            accelChart.update('none');
+            quatChart.update('none');
+            
+            updateConnectionStatus(false); // Mark as disconnected for simulation
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            updateConnectionStatus(false);
+            
+            // Try to connect to real IMU data first
+            setTimeout(async () => {
+                try {
+                    const response = await fetch('http://localhost:8080/api/status');
+                    if (response.ok) {
+                        console.log('Connected to IMU server');
+                        // Update every 100ms for real-time data
+                        setInterval(fetchIMUData, 100);
+                    } else {
+                        throw new Error('Server not available');
+                    }
+                } catch (error) {
+                    console.log('IMU server not available, using simulation mode');
+                    // Fallback to simulation
+                    simulateIMUData();
+                    setInterval(simulateIMUData, 500);
+                }
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
 

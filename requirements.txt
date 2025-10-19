@@ -1,0 +1,4 @@
+Flask==2.3.3
+Flask-CORS==4.0.0
+pyzmq==25.1.2
+numpy==1.24.3
